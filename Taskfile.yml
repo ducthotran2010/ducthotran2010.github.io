@@ -1,0 +1,70 @@
+version: '3'
+
+vars:
+  IMAGE: ruby:3.3
+  RUN: >-
+    docker run --rm -v "{{.ROOT_DIR}}:/site" -v ducke-site-bundle:/usr/local/bundle
+    -w /site
+
+tasks:
+  serve:
+    desc: "Preview at http://localhost:4000 (default: drafts. Set DRAFTS=0 to exclude)"
+    vars:
+      DRAFTS: '{{.DRAFTS | default "1"}}'
+    cmds:
+      - >-
+        {{.RUN}} -it -p 4000:4000 -e DRAFTS={{.DRAFTS}} {{.IMAGE}}
+        bash -c 'bundle check || bundle install &&
+        opts="--host 0.0.0.0 --livereload --force_polling";
+        [ "$DRAFTS" = "1" ] && opts="$opts --drafts";
+        bundle exec jekyll serve $opts'
+
+  build:
+    desc: "Build into _site/, exactly what GitHub Pages ships, drafts excluded"
+    cmds:
+      - >-
+        {{.RUN}} {{.IMAGE}}
+        bash -c "bundle check || bundle install && bundle exec jekyll build"
+
+  build:drafts:
+    internal: true
+    cmds:
+      - >-
+        {{.RUN}} {{.IMAGE}}
+        bash -c "bundle check || bundle install && bundle exec jekyll build --drafts"
+
+  preview:
+    desc: "Build into _site/ with drafts, then serve it at http://localhost:4173"
+    cmds:
+      - task: build:drafts
+      - lsof -tiTCP:4173 -sTCP:LISTEN | xargs -r kill 2>/dev/null || true
+      - python3 -m http.server 4173 --directory _site
+
+  new:
+    desc: "Start a draft (usage: task new TITLE='Why X breaks')"
+    cmds:
+      - |
+        slug=$(echo "{{.TITLE}}" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]\+/-/g; s/^-//; s/-$//')
+        f="_drafts/${slug}.md"
+        [ -e "$f" ] && { echo "exists: $f"; exit 1; }
+        printf -- '---\nlayout: post\ntitle: "%s"\ndescription: >-\n  One sentence. This is the blurb on the index page and in search results.\ntags: [systems]\n---\n\n' "{{.TITLE}}" > "$f"
+        echo "created $f"
+    requires:
+      vars: [TITLE]
+
+  publish:
+    desc: "Move a draft into _posts with today's date (usage: task publish SLUG=why-x-breaks)"
+    cmds:
+      - |
+        src="_drafts/{{.SLUG}}.md"
+        [ -e "$src" ] || { echo "no such draft: $src"; exit 1; }
+        dst="_posts/$(date +%Y-%m-%d)-{{.SLUG}}.md"
+        git mv "$src" "$dst" 2>/dev/null || mv "$src" "$dst"
+        echo "published $dst"
+    requires:
+      vars: [SLUG]
+
+  clean:
+    desc: Remove build output
+    cmds:
+      - rm -rf _site .jekyll-cache .jekyll-metadata

@@ -1,0 +1,22 @@
+{%- assign wc_body = '' -%}
+{%- assign wc_chunks = include.source | split: '</svg>' -%}
+{%- for wc_chunk in wc_chunks -%}
+  {%- assign wc_keep = wc_chunk | split: '<svg' | first -%}
+  {%- assign wc_body = wc_body | append: wc_keep -%}
+{%- endfor -%}
+
+{%- assign wc_prose = '' -%}
+{%- assign wc_chunks = wc_body | split: '</p>' -%}
+{%- for wc_chunk in wc_chunks -%}
+  {%- assign wc_keep = wc_chunk | split: '<p class="gloss">' | first -%}
+  {%- assign wc_prose = wc_prose | append: wc_keep -%}
+{%- endfor -%}
+
+{%- assign wc_open = '' -%}
+{%- assign wc_chunks = wc_prose | split: '</details>' -%}
+{%- for wc_chunk in wc_chunks -%}
+  {%- assign wc_keep = wc_chunk | split: '<details' | first -%}
+  {%- assign wc_open = wc_open | append: wc_keep -%}
+{%- endfor -%}
+
+{%- assign words = wc_open | strip_html | number_of_words -%}

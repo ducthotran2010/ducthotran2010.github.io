@@ -1,0 +1,45 @@
+title: Duc Tho Tran
+tagline: Notes on protocol and platform engineering
+description: >-
+  Duc Tho Tran (ducthotran2010). Distributed systems in Go, smart contracts in
+  Solidity. Author of EIP-7695. Writing about protocol internals, message
+  brokers, and the platforms underneath them.
+
+url: https://ducthotran2010.github.io
+baseurl: ""
+
+author:
+  name: Duc Tho Tran
+  email: ducthotran2010@gmail.com
+
+github_username: ducthotran2010
+linkedin_username: ducthotran2010
+
+permalink: /:title/
+timezone: Asia/Ho_Chi_Minh
+
+markdown: kramdown
+highlighter: rouge
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    block:
+      line_numbers: false
+
+theme: null
+
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+
+feed:
+  path: /feed.xml
+  excerpt_only: true
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - Taskfile.yml
+  - README.md
+  - vendor

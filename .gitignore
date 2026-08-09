@@ -1,0 +1,12 @@
+_site/
+.jekyll-cache/
+.jekyll-metadata
+Gemfile.lock
+vendor/
+.DS_Store
+
+_drafts/
+
+/assets/favicon-cloister.svg
+/assets/favicon-oldlondon.svg
+/assets/favicon-uncial.svg

@@ -1,0 +1,69 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "{{ site.url }}{{ site.baseurl }}/#website",
+      "url": "{{ site.url }}{{ site.baseurl }}/",
+      "name": "Duc Tho Tran",
+      "about": { "@id": "{{ site.url }}{{ site.baseurl }}/#person" }
+    },
+    {
+      "@type": "ProfilePage",
+      "@id": "{{ site.url }}{{ site.baseurl }}/#page",
+      "url": "{{ site.url }}{{ site.baseurl }}/",
+      "isPartOf": { "@id": "{{ site.url }}{{ site.baseurl }}/#website" },
+      "mainEntity": { "@id": "{{ site.url }}{{ site.baseurl }}/#person" }
+    },
+    {
+      "@type": "Person",
+      "@id": "{{ site.url }}{{ site.baseurl }}/#person",
+      "name": "Duc Tho Tran",
+      "alternateName": ["Ducke Tran", "Trần Đức Thọ", "Tran Duc Tho", "ducthotran2010", "Duke"],
+      "givenName": "Duc Tho",
+      "familyName": "Tran",
+      "jobTitle": "Protocol and platform engineer",
+      "url": "{{ site.url }}{{ site.baseurl }}/",
+      "email": "mailto:ducthotran2010@gmail.com",
+      "nationality": { "@type": "Country", "name": "Vietnam" },
+      "alumniOf": { "@type": "CollegeOrUniversity", "name": "FPT University" },
+      "knowsAbout": [
+        "Distributed systems", "Smart contracts", "Solidity", "Go", "Rust",
+        "Blockchain consensus", "Ethereum", "Smart contract security",
+        "Kubernetes", "Payment systems"
+      ],
+      "knowsLanguage": ["Vietnamese", "English"],
+      "sameAs": [
+        "https://github.com/ducthotran2010",
+        "https://www.linkedin.com/in/ducthotran2010"
+      ]
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://eips.ethereum.org/EIPS/eip-7695",
+      "url": "https://eips.ethereum.org/EIPS/eip-7695",
+      "name": "EIP-7695: Ownership Delegation and Context for ERC-721",
+      "author": { "@id": "{{ site.url }}{{ site.baseurl }}/#person" },
+      "publisher": { "@type": "Organization", "name": "Ethereum Improvement Proposals" }
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://github.com/ronin-chain/REPs/blob/main/REP-0015/REP-0015.md",
+      "url": "https://github.com/ronin-chain/REPs/blob/main/REP-0015/REP-0015.md",
+      "name": "REP-0015: Ronin Evolution Proposal",
+      "author": { "@id": "{{ site.url }}{{ site.baseurl }}/#person" }
+    },
+    {
+      "@type": "SoftwareSourceCode",
+      "@id": "https://github.com/ducthotran2010/glare-reduction",
+      "url": "https://github.com/ducthotran2010/glare-reduction",
+      "codeRepository": "https://github.com/ducthotran2010/glare-reduction",
+      "name": "glare-reduction",
+      "description": "Image-processing pipeline for recovering glare-affected images with a convolutional neural network.",
+      "programmingLanguage": "Python",
+      "license": "https://opensource.org/licenses/MIT",
+      "author": { "@id": "{{ site.url }}{{ site.baseurl }}/#person" },
+      "dateCreated": "2019-05-04"
+    }
+  ]
+}

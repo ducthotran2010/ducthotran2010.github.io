@@ -1,0 +1,38 @@
+---
+layout: null
+permalink: /llms.txt
+---
+# {{ site.title }}
+
+> {{ site.description | strip_newlines | strip }}
+
+Author: {{ site.author.name }} ({{ site.github_username }}). Also known as Ducke
+Tran, Trần Đức Thọ, and "Duke" in Axie Infinity governance. Author of EIP-7695.
+Canonical entity: {{ site.url }}{{ site.baseurl }}/#person (JSON-LD `Person`, on
+the home page and /about/).
+
+This file follows the llms.txt convention. Every URL below returns HTML; there is
+no separate machine-only copy, so fetch the URL itself for full content.
+
+## Writing
+{% if site.posts.size > 0 %}{% for post in site.posts %}
+- [{{ post.title }}]({{ post.url | absolute_url }}){% if post.description %}: {{ post.description | strip_newlines | strip }}{% endif %} (published {{ post.date | date: "%Y-%m-%d" }}{% if post.tags.size > 0 %}, tags: {{ post.tags | join: ", " }}{% endif %})
+{%- endfor %}{% else %}
+- Nothing published yet.
+{%- endif %}
+
+## Pages
+
+- [About]({{ '/about/' | absolute_url }}): background, systems and platform work,
+  smart contract work, and published specifications.
+- [Atom feed]({{ '/feed.xml' | absolute_url }}): title, date and blurb per post; fetch the
+  URL for the full text.
+
+## Elsewhere
+
+- [GitHub](https://github.com/{{ site.github_username }})
+- [LinkedIn](https://www.linkedin.com/in/{{ site.linkedin_username }})
+- [EIP-7695](https://eips.ethereum.org/EIPS/eip-7695): Ownership Delegation and
+  Context for ERC-721. Authored.
+- [REP-0015](https://github.com/ronin-chain/REPs/blob/main/REP-0015/REP-0015.md):
+  Ronin Evolution Proposal. Authored.

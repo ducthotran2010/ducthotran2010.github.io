@@ -1,0 +1,144 @@
+---
+layout: page
+title: About
+schema: person
+updated: 2026-08-07
+description: >-
+  Duc Tho Tran (ducthotran2010). Distributed systems in Go, smart contracts in
+  Solidity. Author of EIP-7695. Five years on Ronin at Sky Mavis, across the
+  execution layer, consensus, and the smart contract team.
+---
+
+<h1>Duc Tho Tran</h1>
+  <p class="aka">Ducke Tran · ducthotran2010 · “Duke” in Axie Infinity governance</p>
+
+  <p class="lede">
+    I work on both halves of systems that hold money: the contracts that hold it, and the platform
+    that moves it.
+  </p>
+
+  <p class="page-status">
+    Five years of that was at Sky Mavis on Ronin, the chain behind Axie Infinity, starting in the
+    execution layer, then consensus, then leading the smart contract team. Now on a stablecoin and
+    RWA protocol: Solidity on-chain, Go and Kubernetes below.
+    <span class="page-status-meta">Updated {{ page.updated | date: "%-d %B %Y" }} · this page is
+    about me; the writing is <a href="{{ '/' | relative_url }}">here</a>.</span>
+  </p>
+
+  <h2>How I work</h2>
+
+  <div class="item">
+    <p><b>I build the thing to get the number.</b> Gofka exists because I wanted to know how many
+    nanoseconds it takes to parse a message, and reading about it was never going to tell me. Every
+    figure I publish comes from a program I can re-run, not from a source I trust.</p>
+  </div>
+
+  <div class="item">
+    <p><b>I ship the missing piece when the gap is real.</b> Nobody asked for Ronin VRF. The studios
+    building on Ronin needed verifiable randomness, so did our own teams, and there was none.</p>
+  </div>
+
+  <div class="item">
+    <p><b>I stay on both sides of the boundary.</b> The contract and the service that calls it fail
+    in different ways, and the failures that cost the most live in between. That is why the list
+    below has Solidity and Kubernetes in it and not one or the other.</p>
+  </div>
+
+  <div class="item">
+    <p><b>I would rather be corrected early.</b> Tell me the design is wrong while it is a diagram.
+    I will argue, and if you are right I will say so and change it.</p>
+  </div>
+
+  <h2>Systems and platform</h2>
+
+  <div class="item">
+    <p><b>A Go services platform.</b> Isolated service clusters over a message queue, holding one
+    auditable source of truth for state that has to agree across services. Kubernetes and ArgoCD on
+    GitOps, OpenTelemetry tracing end to end. Card payments on the way in, with the on-ramp designed
+    so an RPC or network failure mid-flow cannot charge twice.</p>
+  </div>
+
+  <div class="item">
+    <p><b><a href="https://github.com/ronin-chain/ronin-snapshot">ronin-snapshot</a>.</b> Daily
+    pruned state snapshots, so an RPC node with corrupted data recovers by download instead of a
+    multi-day resync from genesis. Originated 2021;
+    <a href="https://github.com/ronin-chain/ronin-snapshot/graphs/contributors">top human
+    contributor</a>. It outlived my involvement by two more years.</p>
+  </div>
+
+  <div class="item">
+    <p><b>Free-gas transactions.</b> 1,000+ TPS, 2M+ daily active addresses.</p>
+  </div>
+
+  <div class="item">
+    <p><b>Execution layer and consensus.</b> Hardfork logic in a Geth-based node, and merging
+    upstream go-ethereum releases into the fork for network releases.</p>
+  </div>
+
+  <div class="item">
+    <p><b>A concurrent migration service in Rust</b> that took a three-day run to fifteen
+    minutes.</p>
+  </div>
+
+  <div class="item">
+    <p><b>Gofka</b>, nights and weekends. A message broker in Go. Zero-allocation parsing; the
+    answer was under ten nanoseconds.</p>
+  </div>
+
+  <div class="item">
+    <p><b>Homelab.</b> 28+ services on Kubernetes and ArgoCD, cold-standby recovery under three
+    minutes, in-cluster builds with no public ingress, private overlay networking, and secrets
+    encrypted at rest.</p>
+  </div>
+
+  <h2>Contracts</h2>
+
+  <div class="item">
+    <p><b>AXS staking contracts.</b> Held about $2.5B two weeks after launch, over a quarter of
+    circulating supply. OpenZeppelin audited them and I led the response.</p>
+  </div>
+
+  <div class="item">
+    <p><b>Delegated Proof of Stake.</b> The staking and delegation system in Ronin’s consensus
+    upgrade from PoA. 217M+ RON across 30 validators and 277K+ delegators.</p>
+  </div>
+
+  <div class="item">
+    <p><b>Katana V3.</b> A Uniswap V3 fork, feature-complete in two months. Katana held $150M+ TVL,
+    about 99% of the chain’s DeFi.</p>
+  </div>
+
+  <div class="item">
+    <p><b><a href="https://docs.roninchain.com/developers/tools/vrf">Ronin VRF</a>.</b> Verifiable
+    randomness on chain. I wrote the first version, contracts and oracle. It is a developer service
+    now.</p>
+  </div>
+
+  <p class="note">Also an NFT marketplace settlement engine, genesis systems for 10M+ NFTs, and
+  Ronin Name Service.</p>
+
+  <h2>Written</h2>
+
+  <ul>
+    <li><b><a href="https://eips.ethereum.org/EIPS/eip-7695">EIP-7695</a></b>: ownership delegation
+      and context for ERC-721
+      (<a href="https://ethereum-magicians.org/t/erc-7695-ownership-delegation-and-context-for-erc-721/19716">discussion</a>)</li>
+    <li><b><a href="https://github.com/ronin-chain/REPs/blob/main/REP-0015/REP-0015.md">REP-0015</a></b>
+      : Ronin Evolution Proposal</li>
+    <li><b><a href="https://app.axieinfinity.com/governance/aip-001/">AIP-001</a></b>: one of five
+      technical experts the Axie community convened to choose an upgrade path for the Axie and Land
+      contracts.</li>
+  </ul>
+
+  <h2>Older</h2>
+
+  <p class="note"><a href="https://github.com/ducthotran2010/glare-reduction">glare-reduction</a>,
+  a 2019 computer-vision project, was cited by a USPTO examiner as prior art against
+  <a href="https://patents.google.com/patent/US11678068B2/en">US11678068B2</a>, a Microsoft
+  application. Examiner-cited, not applicant-supplied; I am not an inventor on it.</p>
+
+  <h2>Contact</h2>
+
+  <p><a href="mailto:{{ site.author.email }}">Email</a> is the way. Worth writing about: anything on
+  this page, anything in the writing, and work on protocols, brokers, or the platforms underneath
+  them. If you found a mistake in a post, that is the one I most want to get.</p>

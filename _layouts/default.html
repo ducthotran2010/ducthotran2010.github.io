@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="{{ page.lang | default: 'en' }}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>{% if page.title and page.url != "/" %}{{ page.title }}{% else %}{{ site.tagline }}{% endif %}</title>
+<meta name="description" content="{{ page.description | default: site.description | strip_newlines | strip }}">
+<link rel="canonical" href="{{ page.url | absolute_url }}">
+{%- if page.noindex %}
+<meta name="robots" content="noindex, nofollow">
+{%- endif %}
+
+<meta property="og:type" content="{% if page.layout == 'post' %}article{% else %}profile{% endif %}">
+<meta property="og:site_name" content="{{ site.tagline }}">
+<meta property="og:title" content="{{ page.title | default: site.tagline }}">
+<meta property="og:description" content="{{ page.description | default: site.description | strip_newlines | strip }}">
+<meta property="og:url" content="{{ page.url | absolute_url }}">
+{% if page.layout == 'post' %}<meta property="article:published_time" content="{{ page.date | date_to_xmlschema }}">{% endif %}
+
+<link rel="alternate" type="application/atom+xml" title="{{ site.title }}" href="{{ '/feed.xml' | absolute_url }}">
+<link rel="alternate" type="text/plain" title="llms.txt" href="{{ '/llms.txt' | absolute_url }}">
+<link rel="icon" type="image/svg+xml" href="{{ '/assets/favicon.svg' | relative_url }}">
+<link rel="apple-touch-icon" href="{{ '/assets/favicon.svg' | relative_url }}">
+<link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}?v={{ site.time | date: '%s' }}">
+
+<script>
+  (function () {
+    var t = null;
+    try { t = localStorage.getItem('theme'); } catch (e) {}
+    if (t === 'light' || t === 'dark') {
+      document.documentElement.setAttribute('data-theme', t);
+    }
+  })();
+</script>
+
+{% if page.schema == 'person' %}
+<script type="application/ld+json">
+{% include schema-person.json %}
+</script>
+{% endif %}
+{% if page.layout == 'post' %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": {{ page.title | jsonify }},
+  "description": {{ page.description | default: page.excerpt | strip_html | strip_newlines | truncate: 200 | jsonify }},
+  "datePublished": "{{ page.date | date_to_xmlschema }}",
+  "url": "{{ page.url | absolute_url }}",
+  "mainEntityOfPage": { "@type": "WebPage", "@id": "{{ page.url | absolute_url }}" },
+  "author": { "@type": "Person", "@id": "{{ site.url }}{{ site.baseurl }}/#person", "name": "{{ site.author.name }}" }
+}
+</script>
+{% endif %}
+</head>
+<body>
+
+<nav class="site-nav">
+  <a class="brand" href="{{ '/' | relative_url }}" aria-label="Home">{% include mark.svg %}</a>
+  <span class="nav-links">
+    <a href="{{ '/' | relative_url }}"{% if page.url == '/' %} aria-current="page"{% endif %}>Writing</a>
+    <a href="{{ '/about/' | relative_url }}"{% if page.url contains '/about' %} aria-current="page"{% endif %}>About</a>
+    <button id="theme-toggle" type="button" aria-live="polite"
+            title="Theme: follows your system until you pick one">System</button>
+  </span>
+</nav>
+
+<main>
+{{ content }}
+</main>
+
+<footer>
+  <a href="https://github.com/{{ site.github_username }}">GitHub</a>
+  <a href="https://www.linkedin.com/in/{{ site.linkedin_username }}">LinkedIn</a>
+  <a href="mailto:{{ site.author.email }}">Email</a>
+  <a href="{{ '/feed.xml' | relative_url }}">RSS</a>
+</footer>
+
+<script>
+  (function () {
+    var btn = document.getElementById('theme-toggle');
+    var root = document.documentElement;
+    var order = ['system', 'light', 'dark'];
+    var label = { system: 'System', light: 'Light', dark: 'Dark' };
+
+    function read() {
+      try { return localStorage.getItem('theme') || 'system'; } catch (e) { return 'system'; }
+    }
+    function apply(mode) {
+      if (mode === 'system') root.removeAttribute('data-theme');
+      else root.setAttribute('data-theme', mode);
+      btn.textContent = label[mode];
+      btn.setAttribute('aria-label', 'Theme: ' + label[mode] + '. Click to change.');
+    }
+
+    apply(read());
+    btn.addEventListener('click', function () {
+      var next = order[(order.indexOf(read()) + 1) % order.length];
+      try { localStorage.setItem('theme', next); } catch (e) {}
+      apply(next);
+    });
+  })();
+</script>
+
+<script>
+  (function () {
+    var blocks = document.querySelectorAll(
+      '.post div.highlighter-rouge, .post pre.highlight, .post figure.highlight');
+    Array.prototype.forEach.call(blocks, function (block) {
+      if (block.closest('.code-wrap')) return;
+      var pre = block.tagName === 'PRE' ? block : block.querySelector('pre');
+      if (!pre) return;
+
+      var wrap = document.createElement('div');
+      wrap.className = 'code-wrap';
+      block.parentNode.insertBefore(wrap, block);
+      wrap.appendChild(block);
+
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'copy';
+      btn.textContent = 'Copy';
+      btn.addEventListener('click', function () {
+        navigator.clipboard.writeText(pre.innerText).then(function () {
+          btn.textContent = 'Copied';
+          setTimeout(function () { btn.textContent = 'Copy'; }, 1400);
+        });
+      });
+      wrap.appendChild(btn);
+    });
+  })();
+</script>
+
+<script>
+  (function () {
+    document.querySelectorAll('.gloss').forEach(function (g) {
+      var para = g.nextElementSibling;
+      if (!para || para.tagName.toLowerCase() !== 'p') return;
+
+      var mark = document.createElement('button');
+      mark.type = 'button';
+      mark.className = 'gloss-mark';
+      mark.textContent = 'note';
+      mark.setAttribute('aria-expanded', 'false');
+      mark.setAttribute('aria-label', 'What this paragraph is for');
+      mark.addEventListener('click', function () {
+        var open = g.classList.toggle('open');
+        mark.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+
+      para.insertBefore(mark, para.firstChild);
+      g.classList.add('popin');
+    });
+  })();
+</script>
+
+<script>
+  (function () {
+    var ICON = {
+      prev: 'M16.091 4.929l-7.057 7.078 7.057 7.064a1 1 0 01-1.414 1.414l-7.764-7.77a1 1 0 010-1.415l7.764-7.785a1 1 0 111.415 1.414z',
+      next: 'M7.913 19.071l7.057-7.078-7.057-7.064a1 1 0 011.414-1.414l7.764 7.77a1 1 0 010 1.415l-7.764 7.785a1 1 0 01-1.414-1.414z',
+      play: 'M18.97 12.871l-12.96 7.29a1 1 0 01-1.49-.87V4.71a1 1 0 011.49-.872l12.96 7.29a1 1 0 010 1.743z',
+      pause: 'M8 4.5a1 1 0 011 1v13a1 1 0 11-2 0v-13a1 1 0 011-1zm8 0a1 1 0 011 1v13a1 1 0 11-2 0v-13a1 1 0 011-1z'
+    };
+
+    function button(name, label) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.setAttribute('aria-label', label);
+      b.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="' + ICON[name] + '"/></svg>';
+      return b;
+    }
+
+    document.querySelectorAll('.steps').forEach(function (fig) {
+      var frames = fig.querySelector('.steps-frames');
+      if (!frames) return;
+      var slides = Array.prototype.slice.call(frames.children).filter(function (n) {
+        return n.tagName.toLowerCase() === 'svg';
+      });
+      if (slides.length < 2) return;
+
+      var i = 0, timer = null;
+      var bar = document.createElement('div');
+      bar.className = 'steps-bar';
+      var group = document.createElement('div');
+      group.style.cssText = 'display:flex;align-items:center;gap:1.7rem';
+      var prev = button('prev', 'Previous step');
+      var play = button('play', 'Play');
+      var next = button('next', 'Next step');
+      var count = document.createElement('div');
+      count.className = 'steps-count';
+      count.setAttribute('aria-live', 'polite');
+
+      group.append(prev, play, next);
+      bar.append(group, count);
+      fig.insertBefore(bar, frames.nextSibling);
+      fig.classList.add('steps-live');
+
+      function show(n) {
+        i = (n + slides.length) % slides.length;
+        slides.forEach(function (s, k) { s.classList.toggle('shown', k === i); });
+        count.textContent = (i + 1) + ' / ' + slides.length;
+      }
+      function stop() {
+        clearInterval(timer); timer = null;
+        play.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="' + ICON.play + '"/></svg>';
+        play.setAttribute('aria-label', 'Play');
+      }
+      function start() {
+        timer = setInterval(function () { show(i + 1); }, 1800);
+        play.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="' + ICON.pause + '"/></svg>';
+        play.setAttribute('aria-label', 'Pause');
+      }
+
+      prev.addEventListener('click', function () { stop(); show(i - 1); });
+      next.addEventListener('click', function () { stop(); show(i + 1); });
+      play.addEventListener('click', function () { timer ? stop() : start(); });
+      fig.addEventListener('keydown', function (e) {
+        if (e.key === 'ArrowLeft') { stop(); show(i - 1); }
+        else if (e.key === 'ArrowRight') { stop(); show(i + 1); }
+        else return;
+        e.preventDefault();
+      });
+
+      show(0);
+    });
+  })();
+</script>
+
+</body>
+</html>

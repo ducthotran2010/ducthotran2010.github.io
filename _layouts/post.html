@@ -1,0 +1,86 @@
+---
+layout: default
+---
+<article class="post">
+  <header class="post-header">
+    {%- if page.tags and page.tags.size > 0 %}
+    <p class="kicker">{% for tag in page.tags %}{{ tag }}{% unless forloop.last %} · {% endunless %}{% endfor %}</p>
+    {%- endif %}
+    <h1>{{ page.title }}</h1>
+    {%- if page.description %}
+    <p class="deck">{{ page.description | strip_newlines | strip }}</p>
+    {%- endif %}
+    {%- include wordcount.html source=content -%}
+    {%- assign minutes = words | divided_by: 200 | plus: 1 -%}
+    <p class="post-meta dateline">
+      <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%-d %B %Y" }}</time>
+      <span class="sep">·</span>{{ minutes }} min read
+      <span class="sep">·</span>{{ words }} words
+    </p>
+  </header>
+
+  <nav id="toc" class="toc" hidden>
+    <p class="toc-title">Contents</p>
+    <ol></ol>
+  </nav>
+
+  {{ content }}
+</article>
+
+<script>
+  (function () {
+    var article = document.querySelector('.post');
+    var toc = document.getElementById('toc');
+    if (!article || !toc) return;
+
+    var heads = [].slice.call(article.querySelectorAll('h2, h3'));
+    if (heads.length < 4) return;
+
+    var list = toc.querySelector('ol');
+    var links = [];
+
+    heads.forEach(function (h, i) {
+      if (!h.id) h.id = 'h-' + i;
+      var li = document.createElement('li');
+      li.className = h.tagName === 'H3' ? 'sub' : '';
+      var a = document.createElement('a');
+      a.href = '#' + h.id;
+      a.textContent = h.textContent.trim();
+      li.appendChild(a);
+      list.appendChild(li);
+      links.push(a);
+    });
+
+    toc.hidden = false;
+    document.body.classList.add('has-toc');
+
+    var ticking = false;
+    function sync() {
+      ticking = false;
+      var mark = window.innerHeight / 3;
+      var current = 0;
+      for (var i = 0; i < heads.length; i++) {
+        if (heads[i].getBoundingClientRect().top <= mark) current = i;
+        else break;
+      }
+      links.forEach(function (a, i) {
+        a.classList.toggle('active', i === current);
+      });
+      var active = links[current];
+      if (active && toc.scrollHeight > toc.clientHeight) {
+        var top = active.offsetTop - toc.clientHeight / 2;
+        toc.scrollTo({ top: top, behavior: 'auto' });
+      }
+    }
+    window.addEventListener('scroll', function () {
+      if (!ticking) { ticking = true; requestAnimationFrame(sync); }
+    }, { passive: true });
+    sync();
+  })();
+
+</script>
+
+<nav class="post-nav">
+  {%- if page.previous %}<a class="prev" href="{{ page.previous.url | relative_url }}">← {{ page.previous.title }}</a>{% endif %}
+  {%- if page.next %}<a class="next" href="{{ page.next.url | relative_url }}">{{ page.next.title }} →</a>{% endif %}
+</nav>
