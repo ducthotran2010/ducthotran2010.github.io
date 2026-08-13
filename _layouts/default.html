@@ -10,6 +10,9 @@
 {%- if page.noindex %}
 <meta name="robots" content="noindex, nofollow">
 {%- endif %}
+{%- if page.redirect_to %}
+<meta http-equiv="refresh" content="3; url={{ page.redirect_to | relative_url }}">
+{%- endif %}
 
 <meta property="og:type" content="{% if page.layout == 'post' %}article{% else %}profile{% endif %}">
 <meta property="og:site_name" content="{{ site.tagline }}">

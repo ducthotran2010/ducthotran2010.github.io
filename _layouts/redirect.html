@@ -1,0 +1,7 @@
+---
+layout: default
+---
+
+<p class="lede"><a href="{{ page.redirect_to | relative_url }}">{{ site.tagline }}</a></p>
+
+<script>addEventListener('load',function(){location.replace('{{ page.redirect_to | relative_url }}')})</script>
